@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: resolveai
+          POSTGRES_PASSWORD: resolveai
+          POSTGRES_DB: resolveai
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U resolveai" --health-interval 5s --health-retries 20
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DATABASE_URL: postgresql+asyncpg://resolveai:resolveai@localhost:5432/resolveai
+      REDIS_URL: redis://localhost:6379/0
+      LLM_PROVIDER: fake
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.11.32"
+      - run: uv sync --frozen
+      - name: Lint
+        run: uv run ruff check app tests && uv run ruff format --check app tests
+      - name: Tests
+        run: uv run pytest -q
+      - name: Migrations
+        run: uv run alembic upgrade head
+      - name: Evaluation gate (fails the build if a quality threshold is missed)
+        run: uv run python -m app.evals
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: eval-report
+          path: backend/evals/report.json
+
+  dashboard:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dashboard
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: dashboard/package-lock.json
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npm run build
+
+  terraform:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infra/terraform
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform fmt -check -recursive
+      - run: terraform init -backend=false
+      - run: terraform validate
+      - name: Offline stack test with mocked AWS
+        run: terraform test
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: [backend, dashboard]
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t resolveai:ci .

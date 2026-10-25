@@ -1,0 +1,20 @@
+{"text": "Hi there", "intent": "greeting"}
+{"text": "Namaste", "intent": "greeting"}
+{"text": "Where is my order UC-10001?", "intent": "order_status"}
+{"text": "Track my order please", "intent": "order_status"}
+{"text": "mera order kahan hai UC-10006", "intent": "order_status"}
+{"text": "I want to return my jeans from order UC-10002", "intent": "return_request"}
+{"text": "Please start a return for UC-10007, the watch strap is broken", "intent": "return_request"}
+{"text": "I want a refund for order UC-10003", "intent": "refund_request"}
+{"text": "mujhe UC-10005 ka paisa wapas chahiye", "intent": "refund_request"}
+{"text": "What is your return policy for shoes?", "intent": "knowledge"}
+{"text": "How long do UPI refunds take?", "intent": "knowledge"}
+{"text": "Do you have cash on delivery?", "intent": "knowledge"}
+{"text": "How much is express shipping?", "intent": "knowledge"}
+{"text": "I want to talk to a human agent", "intent": "human_request"}
+{"text": "Connect me to a real person", "intent": "human_request"}
+{"text": "This is the worst service ever, totally useless", "intent": "complaint"}
+{"text": "Tell me a joke", "intent": "off_topic"}
+{"text": "Who will win the cricket match today?", "intent": "off_topic"}
+{"text": "How do I change my account email address?", "intent": "account"}
+{"text": "I forgot my login password", "intent": "account"}

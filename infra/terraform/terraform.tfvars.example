@@ -1,0 +1,12 @@
+# Copy to terraform.tfvars and fill in. terraform.tfvars is git-ignored: never commit it.
+aws_region         = "ap-south-1"
+llm_provider       = "openai"
+openai_api_key     = "sk-..."
+telegram_bot_token = "1234567890:AA..."
+admin_email        = "admin@resolveai.dev"
+admin_password     = "choose-a-strong-password"
+daily_budget_usd   = 5
+
+# Optional: email alerts for errors and the monthly AWS bill
+alert_email              = ""
+monthly_budget_alert_usd = 100

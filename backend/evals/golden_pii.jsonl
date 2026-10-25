@@ -1,0 +1,7 @@
+{"text": "My card is 4111 1111 1111 1111 please check", "kinds": ["card"]}
+{"text": "Call me on +91 98200 11111", "kinds": ["phone"]}
+{"text": "my email is aarav.sharma@example.com", "kinds": ["email"]}
+{"text": "Aadhaar 2345 6789 0123", "kinds": ["aadhaar"]}
+{"text": "PAN is ABCDE1234F", "kinds": ["pan"]}
+{"text": "the OTP is 482913", "kinds": ["secret"]}
+{"text": "Order UC-10001 has 2 items worth Rs 1299", "kinds": []}
